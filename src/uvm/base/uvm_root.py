@@ -29,6 +29,9 @@ class uvm_root(uvm_component):
         self._m_get_config_db = {}
         self.probe()
 
+    def get_type_name():
+        return 'uvm_root'
+
     def get_virtual_interface(self, svinterface):
         for item in vars(svinterface):
             if isinstance(item, hierarchy):
@@ -47,6 +50,26 @@ class uvm_root(uvm_component):
         pass
 
     def build_phase(self, phase : uvm_phase):
+        super().build_phase(phase)
+        m_do_verbosity_settings()
+        m_do_timeout_settings()
+        m_do_start_settings()
+        m_do_max_quit_settings()
+        m_do_dump_args()
+
+    def m_do_verbosity_settings():
+        pass
+
+    def m_do_timeout_settings():
+        pass
+
+    def m_do_start_settings():
+        pass
+
+    def m_do_max_quit_settings():
+        pass
+
+    def m_do_dump_args():
         pass
 
     def die():
