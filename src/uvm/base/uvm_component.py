@@ -28,8 +28,27 @@ class uvm_component(uvm_report_object):
         if child.get_name() in self._m_children:
             uvm_warning('BCLD', 'A child with name(%s) type(%s) cleady exists')
 
-    def get_children():
-        return self.m_children
+    def get_children(children[] : uvm_component):
+        for child in m_children:
+            children.append(child.copy())
+
+    def get_first_child(name : sv_str)-> int:#since string is immutable we are using wrapper sv_str
+        return m_children.first(name)
+
+    def get_next_child(name : sv_str)-> int:#since string is immutable we are using wrapper sv_str
+        return m_children.next(name)
+
+    def get_child(string name) -> uvm_component:
+        if m_children.exits(name):
+            return m_children[name]
+        uvm_warning("NOCHILD", "component with name "+name+"is not a child of component"+get_full_name())
+        return None
+
+    def has_child(name : str):
+        return m_children.exists(name)
+
+    def get_num_children():
+        return m_children.num()
 
     def get_full_name():
         if _m_name == '':
@@ -44,6 +63,7 @@ class uvm_component(uvm_report_object):
         if self._m_name != '':
             uvm_report_error('INVSTM', '')
         super.set_name(name)
+        self.m_set_full_name()
 
     def _m_set_full_name():
         if _m_parent is top or _m_parent is None:
@@ -51,18 +71,93 @@ class uvm_component(uvm_report_object):
         else:
             _m_name = _m_parent.get_full_name()+'.'+get_name()
 
-        def build_phase(self, uvm_phase phase):
-            pass
+    def lookup(name : str):
+        pass
 
-        def connect_phase(self, uvm_phase phase):
-            pass
+    def get_depth() -> int:
+        if m_name == '':
+            return 0
+        get_depth_cnt = 1
 
-        async def run_phase(self):
-            pass
+        for char in m_name:
+            if '.' == m_name:
+                get_depth_cnt += 1
+        return get_depth_cnt
 
-        def do_kill_all():
-            pass
+    def m_extract_name():
+        pass
 
-        def kill():
-            pass
+    def flush():
+        pass
+
+    def do_flush():
+        pass
+
+    def create(name : str):
+        pass
+
+    def clone():
+        pass
+
+    def create_component(requested_type : str, name : str):
+        pass
+
+    def create_object(requested_type : str, name : str = ''):
+        pass
+
+    def set_type_override():
+        pass
+
+    def set_type_override_by_type():
+        pass
+
+    def set_inst_override():
+        pass
+
+    def set_inst_override_by_type():
+        pass
+
+    def set_report_id_verbosity_hier():
+        pass
+
+    def set_report_severity_id_verbosity_hier():
+        pass
+
+    #FIXME many are leftout
+
+
+    def build_phase(self, uvm_phase phase):
+        self.m_buld_done = 1
+        self.build()
+
+    def build():
+        self.m_buld_done = 1
+    
+    def connect_phase(self, uvm_phase phase):
+        self.connect()
+
+    def start_of_simulation_phase(self, uvm_phase):
+        start_of_simulation()
+
+    def end_of_elaboration_phase(self, phase : uvm_phase):
+        end_of_elaboration()
+    
+    async def run_phase(self, phase : uvm_phase):
+        run
+
+    def extract_phase(self, phase : uvm_phase):
+        extract()
+
+    def check_phase(self, phase : uvm_phase):
+        check()
+
+    def report_phase(self, phase : uvm_phase):
+        report()
+
+    
+    def do_kill_all():
+        pass
+    
+    def kill():
+        pass
 
